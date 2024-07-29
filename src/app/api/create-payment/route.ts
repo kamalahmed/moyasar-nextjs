@@ -1,25 +1,31 @@
-import { NextResponse } from 'next/server';
-import Moyasar from 'moyasar';
+// src/app/api/create-payment/route.ts
+import { NextRequest, NextResponse } from 'next/server';
+import { Moyasar } from '@/lib/moyasar';
+import { PaymentData, PaymentResponse } from '@/types/moyasar';
 
-const moyasar = new Moyasar(process.env.MOYASAR_SECRET_KEY as string);
-
-interface RequestBody {
-  amount: number;
-}
-
-export async function POST(request: Request) {
-  const { amount }: RequestBody = await request.json();
-
+export async function POST(request: NextRequest) {
   try {
-    const payment = await moyasar.payment.create({
-      amount: amount,
-      currency: 'SAR',
-      description: 'Payment for Order #1234',
-      callback_url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/payment-callback`,
-    });
+    const { amount, description, source } = await request.json();
 
-    return NextResponse.json({ url: payment.source.transaction_url });
+    const moyasar = new Moyasar(process.env.MOYASAR_SECRET_KEY!);
+    
+    const paymentData: PaymentData = {
+      amount,
+      currency: 'SAR',
+      description,
+      source,
+      callback_url: `${process.env.NEXT_PUBLIC_BASE_URL}/payment-callback`,
+    };
+
+    const payment: PaymentResponse = await moyasar.payment.create(paymentData);
+
+    // Instead of just returning the ID, return the transaction URL as well
+    return NextResponse.json({
+      id: payment.id,
+      transactionUrl: payment.source.transaction_url
+    }, { status: 200 });
   } catch (error) {
-    return NextResponse.json({ error: 'Error creating payment' }, { status: 500 });
+    console.error(error);
+    return NextResponse.json({ message: 'Error creating payment' }, { status: 500 });
   }
 }
