@@ -1,4 +1,8 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# This is a [Next.js](https://nextjs.org/) project that shows how to integrate Moyasar Payment Gateway with it.
+
+
+![Screenshot](screenshot.png)
+
 
 ## Getting Started
 
@@ -16,9 +20,11 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Rename .env.sample to env.local and the replace all variables from Moyasar Dashbaord. 
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+You can use the test cards from the link below.
+https://docs.moyasar.com/testing-cards
+
 
 ## Learn More
 
